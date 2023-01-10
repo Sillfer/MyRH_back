@@ -1,6 +1,7 @@
 package simplon.back.recruiter;
 
 
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -15,7 +16,8 @@ public class RecruiterController {
     }
 
     @RequestMapping("/save")
-    public Recruiter save(Recruiter recruiter) {
+    public Recruiter save(@RequestBody Recruiter recruiter) {
+        System.out.println(recruiter.toString());
         return recruiterService.save(recruiter);
     }
 }

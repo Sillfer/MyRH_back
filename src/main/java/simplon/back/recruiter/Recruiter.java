@@ -23,4 +23,13 @@ public class Recruiter {
 
     @ManyToOne
     private Company company;
+
+    @Override
+    public String toString() {
+        return "Recruiter{" +
+                "id=" + id +
+                ", fullName='" + fullName + '\'' +
+                ", company=" + company +
+                '}';
+    }
 }

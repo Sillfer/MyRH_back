@@ -1,11 +1,15 @@
 package simplon.back.offer;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import simplon.back.company.Company;
 import simplon.back.company.CompanyService;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -22,10 +26,14 @@ public class JobOfferController {
     }
 
     @PostMapping("/save")
-    public JobOffer save(@RequestBody JobOffer jobOffer,@RequestParam String companyName){
+    public ResponseEntity<JobOffer> save(@RequestBody JobOffer jobOffer,@RequestParam String companyName){
         Company company = companyService.findByName(companyName);
         jobOffer.setCompany(company);
-        return jobOfferService.save(jobOffer);
+
+        JobOffer newOffer = jobOfferService.save(jobOffer);
+        System.out.println("-----------------"+newOffer.getEducationLevel());
+
+        return ResponseEntity.ok().contentType(MediaType.APPLICATION_JSON).body(newOffer);
     }
 
     @GetMapping("/find")
@@ -35,7 +43,10 @@ public class JobOfferController {
 
     @GetMapping()
     public ResponseEntity<List<JobOffer>> getAllJobOffers(){
-        return ResponseEntity.ok().body(jobOfferService.findAll());
+        List<JobOffer> jobOffers = jobOfferService.findAll();
+
+
+        return ResponseEntity.ok().contentType(MediaType.APPLICATION_JSON).body(jobOffers);
     }
 
     @GetMapping("/find/title")
