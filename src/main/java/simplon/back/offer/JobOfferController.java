@@ -36,7 +36,7 @@ public class JobOfferController {
         return ResponseEntity.ok().contentType(MediaType.APPLICATION_JSON).body(newOffer);
     }
 
-    @GetMapping("/find")
+    @GetMapping("/search")
     public JobOffer findById(@RequestParam Long id){
         return jobOfferService.findById(id);
     }
@@ -49,12 +49,12 @@ public class JobOfferController {
         return ResponseEntity.ok().contentType(MediaType.APPLICATION_JSON).body(jobOffers);
     }
 
-    @GetMapping("/find/title")
+    @GetMapping("/search/title")
     public ResponseEntity<List<JobOffer>> findJobOfferByTitle(@RequestParam String title){
         return ResponseEntity.ok(jobOfferService.findJobOfferByTitle(title));
     }
 
-    @GetMapping("/find/company")
+    @GetMapping("/search/company")
     public ResponseEntity<List<JobOffer>> findJobOfferByCompany(@RequestParam String company){
         Company company1 = companyService.findByName(company);
         return ResponseEntity.ok(jobOfferService.findJobOfferByCompany(company1));

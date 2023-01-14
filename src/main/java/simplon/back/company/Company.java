@@ -1,10 +1,6 @@
 package simplon.back.company;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -35,11 +31,35 @@ public class Company implements UserDetails {
 
     private String logo;
 
+    private String city;
     @Enumerated(EnumType.STRING)
     private Role role = Role.ROLE_COMPANY;
-
     @Transient
     private Collection<GrantedAuthority> authorities;
+//    @OneToMany(mappedBy = "company")
+//    private List<Recruiter> recruiters;
+
+    public Company() {
+
+    }
+
+    public Company(String name, String address, String email, String password, String phone, String logo, String city) {
+        this.name = name;
+        this.address = address;
+        this.email = email;
+        this.password = password;
+        this.phone = phone;
+        this.logo = logo;
+        this.city = city;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
 
     public Role getRole() {
         return role;
@@ -49,20 +69,13 @@ public class Company implements UserDetails {
         this.role = role;
     }
 
-    public List<Recruiter> getRecruiters() {
-        return recruiters;
-    }
-
-    public void setRecruiters(List<Recruiter> recruiters) {
-        this.recruiters = recruiters;
-    }
-
-    public void setAuthorities(String role) {
-        this.authorities = List.of(new SimpleGrantedAuthority(role));
-    }
-
-    @OneToMany(mappedBy = "company")
-    private List<Recruiter> recruiters;
+//    public List<Recruiter> getRecruiters() {
+//        return recruiters;
+//    }
+//
+//    public void setRecruiters(List<Recruiter> recruiters) {
+//        this.recruiters = recruiters;
+//    }
 
     public Long getId() {
         return id;
@@ -98,11 +111,23 @@ public class Company implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return  authorities;
+        return authorities;
+    }
+
+    public void setAuthorities(Collection<GrantedAuthority> authorities) {
+        this.authorities = authorities;
+    }
+
+    public void setAuthorities(String role) {
+        this.authorities = List.of(new SimpleGrantedAuthority(role));
     }
 
     public String getPassword() {
         return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     @Override
@@ -130,10 +155,6 @@ public class Company implements UserDetails {
         return true;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
     public String getPhone() {
         return phone;
     }
@@ -142,29 +163,13 @@ public class Company implements UserDetails {
         this.phone = phone;
     }
 
-    public String  getLogo() {
+    public String getLogo() {
         return logo;
     }
 
     public void setLogo(String logo) {
         this.logo = logo;
     }
-
-
-
-    public Company(){
-
-    }
-
-    public Company(String name, String address, String email, String password, String phone, String logo) {
-        this.name = name;
-        this.address = address;
-        this.email = email;
-        this.password = password;
-        this.phone = phone;
-        this.logo = logo;
-    }
-
 
     @Override
     public String toString() {
@@ -176,7 +181,6 @@ public class Company implements UserDetails {
                 ", phone='" + phone + '\'' +
                 ", logo='" + logo + '\'' +
                 ", role=" + role +
-                ", recruiters=" + recruiters +
                 '}';
     }
 }
