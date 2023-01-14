@@ -15,8 +15,8 @@ import java.util.List;
 
 @Entity
 @AllArgsConstructor
-@Getter
-@Setter
+//@Getter
+//@Setter
 public class Agent implements UserDetails {
     @Id
     @GeneratedValue(generator = "agent_id_seq")
@@ -25,12 +25,20 @@ public class Agent implements UserDetails {
 
     private String fullName;
 
+    @Column(unique = true)
     private String email;
 
     private String password;
 
     @Enumerated
     private Role role = Role.ROLE_AGENT;
+
+    @Transient
+    private Collection<GrantedAuthority> authorities;
+
+    public void setAuthorities(String role) {
+        this.authorities = List.of(new SimpleGrantedAuthority(role));
+    }
 
     public Role getRole() {
         return role;
@@ -66,8 +74,9 @@ public class Agent implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority(role.name()));
+        return  authorities;
     }
+
 
     public String getPassword() {
         return password;

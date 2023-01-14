@@ -26,36 +26,29 @@ public class JobOfferController {
     }
 
     @PostMapping("/save")
-    public ResponseEntity<JobOffer> save(@RequestBody JobOffer jobOffer,@RequestParam String companyName){
+    public JobOffer save(@RequestBody JobOffer jobOffer, @RequestParam String companyName) {
         Company company = companyService.findByName(companyName);
         jobOffer.setCompany(company);
-
-        JobOffer newOffer = jobOfferService.save(jobOffer);
-        System.out.println("-----------------"+newOffer.getEducationLevel());
-
-        return ResponseEntity.ok().contentType(MediaType.APPLICATION_JSON).body(newOffer);
+        return jobOfferService.save(jobOffer);
     }
 
     @GetMapping("/search")
-    public JobOffer findById(@RequestParam Long id){
+    public JobOffer findById(@RequestParam Long id) {
         return jobOfferService.findById(id);
     }
 
     @GetMapping()
-    public ResponseEntity<List<JobOffer>> getAllJobOffers(){
-        List<JobOffer> jobOffers = jobOfferService.findAll();
-
-
-        return ResponseEntity.ok().contentType(MediaType.APPLICATION_JSON).body(jobOffers);
+    public ResponseEntity<List<JobOffer>> getAllJobOffers() {
+        return ResponseEntity.ok().body(jobOfferService.findAll());
     }
 
     @GetMapping("/search/title")
-    public ResponseEntity<List<JobOffer>> findJobOfferByTitle(@RequestParam String title){
+    public ResponseEntity<List<JobOffer>> findJobOfferByTitle(@RequestParam String title) {
         return ResponseEntity.ok(jobOfferService.findJobOfferByTitle(title));
     }
 
     @GetMapping("/search/company")
-    public ResponseEntity<List<JobOffer>> findJobOfferByCompany(@RequestParam String company){
+    public ResponseEntity<List<JobOffer>> findJobOfferByCompany(@RequestParam String company) {
         Company company1 = companyService.findByName(company);
         return ResponseEntity.ok(jobOfferService.findJobOfferByCompany(company1));
     }

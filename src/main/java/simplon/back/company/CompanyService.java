@@ -39,4 +39,8 @@ public class CompanyService {
     public Company findByName(String name) {
         return companyRepository.findByName(name);
     }
+
+    public Company findById(Long id) {
+        return companyRepository.findById(id).orElseThrow( () -> new IllegalStateException("Company not found"));
+    }
 }

@@ -31,6 +31,8 @@ public class JobOffer {
 
     private int experienceLevel;
 
+    private String status = "pending";
+
     @ManyToOne
     private Company company;
 
@@ -114,6 +116,14 @@ public class JobOffer {
         this.experienceLevel = experienceLevel;
     }
 
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
     public JobOffer(){
 
     }
@@ -128,5 +138,20 @@ public class JobOffer {
         this.experienceLevel = experienceLevel;
     }
 
-
+    @Override
+    public String toString() {
+        return "JobOffer{" +
+                "id=" + id +
+                ", title='" + title + '\'' +
+                ", description='" + description + '\'' +
+                ", location='" + location + '\'' +
+                ", contractType='" + contractType + '\'' +
+                ", salary='" + salary + '\'' +
+                ", profile='" + profile + '\'' +
+                ", educationLevel='" + educationLevel + '\'' +
+                ", experienceLevel=" + experienceLevel +
+                ", status='" + status + '\'' +
+                ", company=" + company.toString() +
+                '}';
+    }
 }

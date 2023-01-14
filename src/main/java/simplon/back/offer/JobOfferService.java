@@ -23,8 +23,10 @@ public class JobOfferService {
     }
 
     public JobOffer save(JobOffer jobOffer) {
+//        send the email to the company that created the job offer
         emailSenderService.sendEmail("gliouinemahdi0@gmail.com",
-                "New Job Offer", "A new job offer has been created by " + jobOffer.getCompany().getName() + " for the position of " + jobOffer.getTitle());
+                "New Job Offer", "A new job offer has been created by " + jobOffer.getCompany().getName() + "\n For the position of " + jobOffer.getTitle()
+                        + " \n Please Login to this Link to see the details : http://localhost:4200/auth/admin");
         return jobOfferRepository.save(jobOffer);
     }
 

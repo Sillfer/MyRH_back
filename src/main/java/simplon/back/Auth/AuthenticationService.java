@@ -5,6 +5,8 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import simplon.back.agent.Agent;
+import simplon.back.agent.AgentService;
 import simplon.back.company.Company;
 import simplon.back.company.CompanyService;
 import simplon.back.config.JwtService;
@@ -17,6 +19,8 @@ public class AuthenticationService {
 
     private final JwtService jwtService;
     private final PasswordEncoder passwordEncoder;
+
+    private final AgentService agentService;
 
     private final AuthenticationManager authenticationManager;
 
@@ -35,22 +39,43 @@ public class AuthenticationService {
         return AuthenticationResponse.builder().token(token).build();
     }
 
-    public AuthenticationResponse authenticate(AuthenticationRequest authRequest) {
-        try{
-            authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(
-                            authRequest.getEmail(),
-                            authRequest.getPassword()
-                    )
-            );
-        }catch (Exception e){
-            throw new RuntimeException(e.getMessage());
-        }
-        Company company = companyService.findByEmail(authRequest.getEmail());
-        company.setAuthorities(company.getRole().toString());
+    public AuthenticationResponse registerAgent(Agent registerRequest) {
+        Agent agent = new Agent();
+        agent.setFullName(registerRequest.getFullName());
+        agent.setEmail(registerRequest.getEmail());
+        agent.setPassword(passwordEncoder.encode(registerRequest.getPassword()));
+        agent.setRole(Role.ROLE_AGENT);
+        agentService.save(agent);
+        var token = jwtService.generateToken(agent);
 
-        var token = jwtService.generateToken(company);
-        return AuthenticationResponse.builder().token(token).company(company).build();
+        return AuthenticationResponse.builder().token(token).agent(agent).build();
+    }
+
+    public AuthenticationResponse authenticate(AuthenticationRequest authRequest) {
+
+
+        if (!authRequest.getEmail().startsWith("agent")) {
+            try{
+                authenticationManager.authenticate(
+                        new UsernamePasswordAuthenticationToken(
+                                authRequest.getEmail(),
+                                authRequest.getPassword()
+                        )
+                );
+            }catch (Exception e){
+                throw new RuntimeException(e.getMessage());
+            }
+            Company company = companyService.findByEmail(authRequest.getEmail());
+            company.setAuthorities(company.getRole().toString());
+            var token = jwtService.generateToken(company);
+            // build token and get company by email
+            return AuthenticationResponse.builder().token(token).company(company).build();
+        }else {
+            Agent agent = agentService.findByEmail(authRequest.getEmail());
+            agent.setAuthorities(agent.getRole().toString());
+            var token = jwtService.generateToken(agent);
+            return AuthenticationResponse.builder().token(token).agent(agent).build();
+        }
     }
 
 }
