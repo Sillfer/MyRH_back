@@ -23,7 +23,8 @@ public class JobOfferService {
     }
 
     public JobOffer save(JobOffer jobOffer) {
-        emailSenderService.sendEmail("gliouinemahdi0@gmail.com", "New Job Offer", "A new job offer has been created");
+        emailSenderService.sendEmail("gliouinemahdi0@gmail.com",
+                "New Job Offer", "A new job offer has been created by " + jobOffer.getCompany().getName() + " for the position of " + jobOffer.getTitle());
         return jobOfferRepository.save(jobOffer);
     }
 
