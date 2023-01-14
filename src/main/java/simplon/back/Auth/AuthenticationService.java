@@ -50,7 +50,7 @@ public class AuthenticationService {
         company.setAuthorities(company.getRole().toString());
 
         var token = jwtService.generateToken(company);
-        return AuthenticationResponse.builder().token(token).build();
+        return AuthenticationResponse.builder().token(token).company(company).build();
     }
 
 }
