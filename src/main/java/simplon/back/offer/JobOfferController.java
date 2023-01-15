@@ -3,6 +3,8 @@ package simplon.back.offer;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -38,8 +40,8 @@ public class JobOfferController {
     }
 
     @GetMapping()
-    public ResponseEntity<List<JobOffer>> getAllJobOffers() {
-        return ResponseEntity.ok().body(jobOfferService.findAll());
+    public Page<JobOffer>findAll(@RequestParam("page") int page){
+        return jobOfferService.findAll(Pageable.ofSize(5).withPage(page));
     }
 
     @GetMapping("/search/title")
